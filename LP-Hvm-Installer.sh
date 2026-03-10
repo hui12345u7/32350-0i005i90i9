@@ -93,7 +93,7 @@ elif [ "$choice" == "4" ]; then
 
 echo "Installing LXC BOT V6..."
 
-python3 <(curl -fsSL https://raw.githubusercontent.com/DreamHost2ws/HVM5.1/main/PAID-LXC-BOT-6.0%20(1).py)
+python3 <(curl -fsSL https://raw.githubusercontent.com/DreamHost2ws/HVM5.1/main/lxc-bot-v6.py)
 
 echo ""
 echo "Installing LXC / LXD..."
