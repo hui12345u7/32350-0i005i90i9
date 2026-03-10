@@ -9,16 +9,17 @@ echo ""
 echo "1) HVM 5.1 Installer"
 echo "2) LXC / LXD Installer"
 echo "3) Cloudflare Setup"
-echo "4) LXC BOT V6"
 echo ""
 
-read -p "Enter choice [1-4]: " choice
+read -p "Enter choice [1-3]: " choice
 
 
-# ==================================
-# OPTION 1 : HVM INSTALLER
-# ==================================
+# ===============================
+# OPTION 1 : HVM 5.1 INSTALLER
+# ===============================
 if [ "$choice" == "1" ]; then
+
+echo "Starting HVM 5.1 Installation..."
 
 apt update -y
 apt install git -y
@@ -33,6 +34,8 @@ mkdir -p ~/.config/pip
 echo -e "[global]\nbreak-system-packages = true" > ~/.config/pip/pip.conf
 
 pip install -r requirements.txt
+
+echo "Creating systemd service..."
 
 cat <<EOF > /etc/systemd/system/hvm.service
 [Unit]
@@ -51,21 +54,27 @@ Environment=PYTHONUNBUFFERED=1
 WantedBy=multi-user.target
 EOF
 
+echo "Starting HVM..."
+
 python3 hvm-5.1.py
 
 
-# ==================================
-# OPTION 2 : LXC INSTALLER
-# ==================================
+# ===============================
+# OPTION 2 : LXC / LXD INSTALLER
+# ===============================
 elif [ "$choice" == "2" ]; then
+
+echo "Starting LXC Installer..."
 
 bash <(curl -fsSL https://raw.githubusercontent.com/hopingboyz/lxc-installer/main/lxc-installer.sh)
 
 
-# ==================================
+# ===============================
 # OPTION 3 : CLOUDFLARE SETUP
-# ==================================
+# ===============================
 elif [ "$choice" == "3" ]; then
+
+echo "Installing Cloudflare Tunnel..."
 
 sudo mkdir -p --mode=0755 /usr/share/keyrings
 
@@ -83,79 +92,13 @@ read -p "Enter your Cloudflare Tunnel Token: " token
 
 cloudflared service install $token
 
-echo "Cloudflare Installed!"
-
-
-# ==================================
-# OPTION 4 : LXC BOT V6
-# ==================================
-elif [ "$choice" == "4" ]; then
-
-echo "Installing LXC BOT V6..."
-
-python3 <(curl -fsSL https://raw.githubusercontent.com/DreamHost2ws/HVM5.1/main/lxc-bot-v6.py)
-
 echo ""
-echo "Installing LXC / LXD..."
-
-apt update -y
-apt upgrade -y
-
-apt install lxc lxc-utils bridge-utils uidmap -y
-apt install snapd -y
-
-systemctl enable --now snapd.socket
-
-snap install lxd
-
-usermod -aG lxd $USER
-
-newgrp lxd
-
-lxd init
-
-apt install python3-pip -y
-
-mkdir -p ~/.config/pip
-echo -e "[global]\nbreak-system-packages = true" > ~/.config/pip/pip.conf
+echo "Cloudflare Tunnel Installed Successfully!"
 
 
-echo ""
-read -p "Enter DISCORD BOT TOKEN: " TOKEN
-read -p "Enter MAIN ADMIN ID: " ADMINID
-
-
-cat <<EOF > /etc/systemd/system/unixbot.service
-[Unit]
-Description=UnixBot Discord Bot
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/root
-
-Environment="PYTHONUNBUFFERED=1"
-Environment="DISCORD_TOKEN=$TOKEN"
-Environment="MAIN_ADMIN_ID=$ADMINID"
-
-ExecStart=/usr/bin/python3 /root/bot.py
-
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-
-systemctl daemon-reload
-systemctl enable unixbot
-systemctl restart unixbot
-
-echo ""
-echo "LXC BOT V6 Installed & Started!"
-
-
+# ===============================
+# INVALID OPTION
+# ===============================
 else
 
 echo "Invalid option selected!"
