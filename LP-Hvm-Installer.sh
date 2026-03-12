@@ -29,16 +29,15 @@ clear
 # ==========================
 
 echo "==========================================="
-echo "        ⚡ LIGHTINGPLAYS INSTALLER ⚡"
+echo "        ⚡ AyushTheWarrior INSTALLER ⚡"
 echo "==========================================="
 echo ""
 echo "1) HVM 5.1 Installer"
 echo "2) LXC / LXD Installer"
 echo "3) Cloudflare Setup"
-echo "4) LXC BOT V6"
 echo ""
 
-read -p "Enter choice [1-4]: " choice
+read -p "Enter choice [1-3]: " choice
 
 
 # ===============================
@@ -50,8 +49,8 @@ if [ "$choice" == "1" ]; then
 apt update -y
 apt install git -y
 
-git clone https://github.com/DreamHost2ws/HVM5.1
-cd HVM5.1
+git clone https://github.com/hui12345u7/32350-0i005i90i9
+cd 32350-0i005i90i9
 
 apt update
 apt install python3-pip -y
@@ -87,7 +86,7 @@ python3 hvm-5.1.py
 
 elif [ "$choice" == "2" ]; then
 
-bash <(curl -fsSL https://raw.githubusercontent.com/hopingboyz/lxc-installer/main/lxc-installer.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/OfficialCodesHub/One-click-Cmds/refs/heads/main/lxd%20installer)
 
 
 # ===============================
@@ -110,97 +109,6 @@ sudo apt-get install cloudflared -y
 read -p "Enter your Cloudflare Tunnel Token: " token
 
 cloudflared service install $token
-
-
-# ===============================
-# OPTION 4 : LXC BOT V6
-# ===============================
-
-elif [ "$choice" == "4" ]; then
-
-echo "Installing LXC BOT V6..."
-
-apt update
-apt install git -y
-
-git clone https://github.com/DreamHost2ws/VPSbotv6
-cd VPSbotv6
-
-# Ubuntu setup
-if [[ "$OS" == "ubuntu" ]]; then
-
-sudo apt update && sudo apt upgrade -y
-sudo apt install lxc lxc-utils -y
-
-sudo apt install snapd -y
-sudo systemctl enable --now snapd.socket
-
-sudo snap install lxd
-
-sudo usermod -aG lxd $USER
-newgrp lxd
-
-sudo lxd init
-
-sudo apt update
-sudo apt install lxc lxc-utils bridge-utils uidmap -y
-
-fi
-
-# Debian setup
-if [[ "$OS" == "debian" ]]; then
-
-sudo apt install snapd -y
-sudo systemctl enable --now snapd.socket
-
-sudo ln -s /var/lib/snapd/snap /snap
-
-sudo snap install lxd
-
-sudo usermod -aG lxd $USER
-newgrp lxd
-
-sudo lxd init
-
-fi
-
-
-apt install python3-pip -y
-
-mkdir -p ~/.config/pip
-echo -e "[global]\nbreak-system-packages = true" > ~/.config/pip/pip.conf
-
-read -p "Enter DISCORD BOT TOKEN: " TOKEN
-read -p "Enter MAIN ADMIN ID: " ADMIN
-
-cat <<EOF > /etc/systemd/system/unixbot.service
-[Unit]
-Description=UnixBot Discord Bot
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/root/VPSbotv6
-
-Environment="PYTHONUNBUFFERED=1"
-Environment="DISCORD_TOKEN=$TOKEN"
-Environment="MAIN_ADMIN_ID=$ADMIN"
-
-ExecStart=/usr/bin/python3 /root/VPSbotv6/bot.py
-
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl enable unixbot
-systemctl restart unixbot
-
-echo "LXC BOT V6 Installed & Running"
-
 
 # ===============================
 # INVALID OPTION
