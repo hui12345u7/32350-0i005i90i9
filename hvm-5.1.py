@@ -330,7 +330,7 @@ def init_db():
         settings_init = [
             ('cpu_threshold', '90', 'CPU usage threshold for auto-suspension (%)'),
             ('ram_threshold', '90', 'RAM usage threshold for auto-suspension (%)'),
-            ('site_name', 'HVM PANEL', 'Site name'),
+            ('site_name', 'HVM PANEL', 'AstraNodes'),
             ('site_description', 'High-Performance VPS Management Panel', 'Site description'),
             ('header_icon', '/static/img/logo.png', 'Header icon path'),
             ('favicon', '/static/img/favicon.ico', 'Favicon path'),
@@ -9002,4 +9002,5 @@ if __name__ == "__main__":
                 sys.exit(0)
         else:
             logger.warning("Running with Flask development server (not recommended for production)")
+
             app.run(host=HOST, port=PORT, debug=False, threaded=True)
